@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词复习</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');/*套用Googel的Quicksand字体*/
+        body {
+            text-align: center;
+            margin: 0;
+            min-height: 100vh;
+            background-color: #6E7B6C;
+            background-image: 
+                radial-gradient(closest-side, rgba(199, 237, 204, 1),
+            rgba(199, 237, 204, 0)),
+                radial-gradient(closest-side, rgba(227, 237, 205, 1),
+            rgba(227, 237, 205, 0)),
+                radial-gradient(closest-side, rgba(220, 226, 241, 1),
+            rgba(220, 226, 241, 0)),
+                radial-gradient(closest-side, rgba(233, 235, 254, 1),
+            rgba(233, 235, 254, 0)),
+                radial-gradient(closest-side, rgba(250, 249, 222, 1),
+            rgba(250, 249, 222, 0));
+            background-size: 
+                130vmax 130vmax,
+                80vmax 80vmax,
+                90vmax 90vmax,
+                110vmax 110vmax,
+                90vmax 90vmax;
+            background-position: 
+                -80vmax -80vmax,
+                60vmax -30vmax,
+                10vmax 10vmax,
+                -30vmax -10vmax,
+                50vmax 50vmax;
+            background-repeat: no-repeat;
+            animation: 10s movement linear infinite;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            display: block;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2;
+        }
+
+        @keyframes movement {
+            0%, 100% {
+            background-size: 
+                130vmax 130vmax,
+                80vmax 80vmax,
+                90vmax 90vmax,
+                110vmax 110vmax,
+                90vmax 90vmax;
+            background-position: 
+                -80vmax -80vmax,
+                60vmax -30vmax,
+                10vmax 10vmax,
+                -30vmax -10vmax,
+                50vmax 50vmax;
+            }
+            25% {
+            background-size: 
+                100vmax 100vmax,
+                90vmax 90vmax,
+                100vmax 100vmax,
+                90vmax 90vmax,
+                60vmax 60vmax;
+            background-position: 
+                -60vmax -90vmax,
+                50vmax -40vmax,
+                00vmax -20vmax,
+                -40vmax -20vmax,
+                40vmax 60vmax;
+            }
+            50% {
+            background-size: 
+                80vmax 80vmax,
+                110vmax 110vmax,
+                80vmax 80vmax,
+                60vmax 60vmax,
+                80vmax 80vmax;
+            background-position: 
+                -50vmax -70vmax,
+                40vmax -30vmax,
+                10vmax 0vmax,
+                20vmax 10vmax,
+                40vmax 60vmax;
+            }
+            75% {
+            background-size: 
+                90vmax 90vmax,
+                90vmax 90vmax,
+                100vmax 100vmax,
+                90vmax 90vmax,
+                70vmax 70vmax;
+            background-position: 
+                -50vmax -40vmax,
+                50vmax -30vmax,
+                20vmax 0vmax,
+                -10vmax 10vmax,
+                40vmax 60vmax;
+            }
+        }
+
+        .box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 3;
+        }
+
+        span {
+            position: relative;
+            top: 20px;
+            z-index: 3;
+            font-size: 80px;
+            font-weight: 100;
+            letter-spacing: 10px;
+            font-family: 'Quicksand';
+        }
+
+        #result {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 20px 0;
+            font-family: 'Quicksand';
+        }
+
+        #refresh-button {
+            position: relative;
+            z-index: 3;
+            top: 400px;
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #refresh-button:hover {
+            background-color:  #c7edcc;
+            color: black;
+            box-shadow: 10px 10px 10px #6E7B6C;
+            transition: .2s;
+        }
+        #refresh-button:active {
+            background-color: #6E7B6C;
+        }
+    </style>
+</head>
+<body>
+    <span>Word review</span>
+    <div class="box">
+        <div id="result"></div>
+    </div>
+
+    <button id="refresh-button">抽取单词</button>
+
+    <script>
+        // 定义单词列表，将需要复习的单词输入单引号中
+        const words = ['believe', 'trust', 'belief', 'bell', 'belong', 'below', 'belt', 'bench', 'bend', 'benefit', 'beneficial', 'beside', 'besides', 'best', 'good', 'better', 'between', 'beyond', 'bicycle', 'bike', 'big'];
+
+
+        // 初始化已复习单词列表
+        let reviewedWords = [];
+
+        // 随机抽取一个单词
+        function getRandomWord() {
+            let randomIndex = Math.floor(Math.random() * words.length );
+            let word = words[randomIndex];
+
+            // 将已复习的单词从单词列表中删除
+            words.splice(randomIndex, 1);
+            reviewedWords.push(word);
+
+            return word;
+        }
+
+        // 复习单词
+        function reviewWords() {
+            // 如果还有未复习的单词
+            if (words.length > 0) {
+                let word = getRandomWord();
+                document.getElementById('result').textContent = word;
+
+                // 如果所有单词都复习完
+            } else {
+                document.getElementById('result').textContent = '此组单词复习结束！';
+            }
+        }
+
+        // 绑定事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('refresh-button').addEventListener('click', reviewWords);
+        });
+    </script>
+</body>
+</html>
